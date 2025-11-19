@@ -1,0 +1,219 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  findAppointmentNoteById(id: Int!): AppointmentNoteResponse
+  findAppointmentById(id: Int!): AppointmentResponse
+  findAppointmentStatusById(id: Int!): AppointmentStatusResponse
+  findBreedById(id: Int!): BreedResponse
+  findClinicalHistoryById(id: Int!): ClinicalHistoryResponse
+  findConsultationById(id: Int!): ConsultationResponse
+  findOwnerById(id: Int!): OwnerResponse
+  findPetById(id: Int!): PetResponse
+  findRoleById(id: Int!): RoleResponse
+  findSpecieById(id: Int!): SpecieResponse
+  findTreatmentById(id: Int!): TreatmentResponse
+  findUserById(id: Int!): UserResponse
+  findVeterinarianById(id: Int!): VeterinarianResponse
+}
+
+type Mutation {
+  createAppointmentNote(req: AppointmentNoteRequest): AppointmentNoteResponse
+  createAppointment(req: AppointmentRequest): AppointmentResponse
+  createAppointmentStatus(
+    req: AppointmentStatusRequest
+  ): AppointmentStatusResponse
+  createBreed(req: BreedRequest): BreedResponse
+  createClinicalHistory(req: ClinicalHistoryRequest): ClinicalHistoryResponse
+  createConsultation(req: ConsultationRequest): ConsultationResponse
+  createOwner(req: OwnerRequest): OwnerResponse
+  createPet(req: PetRequest): PetResponse
+  createRole(req: RoleRequest): RoleResponse
+  createSpecie(req: SpecieRequest): SpecieResponse
+  createTreatment(req: TreatmentRequest): TreatmentResponse
+  createUser(req: UserRequest): UserResponse
+  createVeterinarian(req: VeterinarianRequest): VeterinarianResponse
+}
+
+type AppointmentNoteResponse {
+  id: ID!
+  name: String!
+  note: String!
+  date: String!
+  reason: String
+  active: Boolean!
+  appointment: AppointmentResponse
+}
+input AppointmentNoteRequest {
+  name: String!
+  note: String!
+  date: String!
+  appointmentId: Int!
+}
+
+type AppointmentResponse {
+  id: ID!
+  date: String!
+  reason: String!
+  createdAt: String
+  active: Boolean!
+  pet: PetResponse
+  owner: OwnerResponse
+  status: AppointmentStatusResponse
+}
+input AppointmentRequest {
+  date: String!
+  reason: String!
+  petId: Int!
+  ownerId: Int!
+  statusId: Int!
+}
+
+type AppointmentStatusResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+}
+input AppointmentStatusRequest {
+  name: String!
+}
+
+type BreedResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+  specie: SpecieResponse
+}
+input BreedRequest {
+  name: String!
+  specieId: Int!
+}
+
+type ClinicalHistoryResponse {
+  id: ID!
+  date: String! # Date
+  active: Boolean!
+  pet: PetResponse
+  consultation: ConsultationResponse
+  treatment: TreatmentResponse
+}
+input ClinicalHistoryRequest {
+  date: String! # Date
+  petId: Int!
+  consultationId: Int!
+  treatmentId: Int!
+}
+
+type ConsultationResponse {
+  id: ID!
+  type: String!
+  diagnosis: String!
+  date: String! # Timestamp
+  active: Boolean!
+  veterinarian: VeterinarianResponse
+}
+input ConsultationRequest {
+  type: String!
+  diagnosis: String!
+  date: String! # Timestamp
+  veterinarianId: Int!
+}
+
+type OwnerResponse {
+  id: ID!
+  name: String!
+  phone: String!
+  address: String!
+  active: Boolean!
+}
+input OwnerRequest {
+  name: String!
+  phone: String!
+  address: String!
+}
+
+type PetResponse {
+  id: ID!
+  name: String!
+  birthDate: String! # Date
+  age: Int!
+  active: Boolean!
+  owner: OwnerResponse
+  specie: SpecieResponse
+  breed: BreedResponse
+}
+input PetRequest {
+  name: String!
+  birthDate: String! # Date
+  age: Int!
+  ownerId: Int!
+  specieId: Int!
+  breedId: Int!
+}
+
+type RoleResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+}
+input RoleRequest {
+  name: String!
+  active: Boolean!
+}
+
+type SpecieResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+}
+input SpecieRequest {
+  name: String!
+}
+
+type TreatmentResponse {
+  id: ID!
+  name: String!
+  description: String!
+  amount: Float
+  frequency: String!
+  sideEffects: String!
+  active: Boolean!
+}
+input TreatmentRequest {
+  name: String!
+  description: String!
+  amount: Float
+  frequency: String!
+  sideEffects: String!
+  active: Boolean!
+}
+
+type UserResponse {
+  id: ID!
+  name: String!
+  password: String!
+  active: Boolean!
+  role: RoleResponse!
+}
+input UserRequest {
+  name: String!
+  password: String!
+  active: Boolean!
+  roleId: Int!
+}
+
+type VeterinarianResponse {
+  id: ID!
+  name: String!
+  phone: String!
+  email: String!
+  active: Boolean!
+}
+input VeterinarianRequest {
+  name: String!
+  phone: String!
+  email: String!
+  active: Boolean
+}

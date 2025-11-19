@@ -1,0 +1,102 @@
+package com.veterinary.configuration;
+
+import java.util.List;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private AuthenticationProvider authenticationProvider;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(
+                auth -> auth.requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/appointment_notes/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/appointment_notes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/appointment_notes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/appointments/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/appointments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/appointments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/appointment_status/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/appointment_status/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/appointment_status/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/breeds/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/breeds/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/breeds/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/clinical_histories/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/clinical_histories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/clinical_hitories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/consultations/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/consultations/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/consultations/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/owners/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/owners/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/owners/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/pets/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/pets/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/pest/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/system_roles/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/system_roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/system_roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/species/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/species/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/species/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tretments/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/tretments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/tretments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/system_users/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/system_users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/system_users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/veterinarian/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/veterinarian/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/veterinarian/**").hasRole("ADMIN")
+                        .requestMatchers("/graphql").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .httpBasic(withDefaults()).csrf(csrf -> csrf.disable())
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("http://localhost:8005"));
+        configuration.setAllowedMethods(List.of("GET", "POST"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+    /*
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+     */
+}
