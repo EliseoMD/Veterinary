@@ -1,0 +1,71 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+
+  findRoleById(id: Int!): SystemRoleResponse
+
+  findUserById(id: Int!): SystemUserResponse
+
+  findTreatmentById(id: Int!): TreatmentResponse
+}
+
+type Mutation {
+
+  createRole(req: SystemRoleRequest): SystemRoleResponse
+
+  createUser(req: SystemUserRequest): SystemUserResponse
+
+  createTreatment(req: TreatmentRequest): TreatmentResponse
+}
+
+
+type SystemRoleResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+}
+
+input SystemRoleRequest {
+  name: String!
+  active: Boolean!
+}
+
+
+type SystemUserResponse {
+  id: ID!
+  name: String!
+  password: String!
+  active: Boolean!
+  role: SystemRoleResponse!
+}
+
+input SystemUserRequest {
+  name: String!
+  password: String!
+  active: Boolean!
+  roleId: Int!
+}
+
+
+type TreatmentResponse {
+  id: ID!
+  name: String!
+  description: String!
+  amount: Float
+  frequency: String!
+  sideEffects: String!
+  active: Boolean!
+}
+
+input TreatmentRequest {
+  name: String!
+  description: String!
+  amount: Float
+  frequency: String!
+  sideEffects: String!
+  active: Boolean!
+}
+
