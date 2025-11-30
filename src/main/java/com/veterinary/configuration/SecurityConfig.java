@@ -93,6 +93,7 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -128,6 +129,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Primary
     public UserDetailsService userDetailsService() {
         return username -> {
             System.out.println("--- [DEBUG] Intento de login: " + username); // <--- CHIVATO 1
