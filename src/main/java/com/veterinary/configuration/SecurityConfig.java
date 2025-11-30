@@ -5,8 +5,11 @@ import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +22,7 @@ import com.veterinary.model.Users;
 import com.veterinary.repository.UserRepository;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final UserRepository userRepository;
@@ -29,34 +33,44 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
-                auth -> auth.requestMatchers("/signin", "/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/roles/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/roles/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/roles/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/breeds/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/breeds/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/breeds/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/owners/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/owners/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/owners/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/pets/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/pets/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/pets/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/pet_photos/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/pet_photos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/pet_photos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/species/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/species/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/species/**").hasRole("ADMIN")
-                        .requestMatchers("/graphql").authenticated()
-                        .anyRequest().authenticated())
-                .httpBasic(withDefaults()).csrf(csrf -> csrf.disable())
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/signin", "/signup", "/api/v1/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/roles/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/roles/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/roles/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/breeds/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/breeds/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/breeds/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/owners/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/owners/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/owners/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/pets/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/pets/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/pets/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/pet_photos/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/pet_photos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/pet_photos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/species/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/species/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/species/**").hasRole("ADMIN")
+                .requestMatchers("/graphql").authenticated()
+                .anyRequest().authenticated())
+                .httpBasic(withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .logout(logout -> logout.logoutUrl("/signout").permitAll());
+
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService());
+        return provider;
     }
 
     @Bean
@@ -83,5 +97,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
