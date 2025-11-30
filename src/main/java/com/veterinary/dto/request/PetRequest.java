@@ -1,6 +1,5 @@
 package com.veterinary.dto.request;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
