@@ -1,0 +1,83 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  findBreedById(id: Int!): BreedResponse
+  findOwnerById(id: Int!): OwnerResponse
+  findPetById(id: Int!): PetResponse
+  findSpecieById(id: Int!): SpecieResponse
+  findPetPhotoById(id: Int!): PetPhotoResponse
+}
+
+type Mutation {
+  createBreed(req: BreedRequest): BreedResponse
+  createOwner(req: OwnerRequest): OwnerResponse
+  createPet(req: PetRequest): PetResponse
+  createSpecie(req: SpecieRequest): SpecieResponse
+  createPetPhoto(req: PetPhotoRequest): PetPhotoResponse
+}
+
+type BreedResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+  specie: SpecieResponse
+}
+input BreedRequest {
+  name: String!
+  specieId: Int!
+}
+
+type OwnerResponse {
+  id: ID!
+  name: String!
+  phone: String!
+  address: String!
+  active: Boolean!
+}
+input OwnerRequest {
+  name: String!
+  phone: String!
+  address: String!
+}
+
+type PetResponse {
+  id: ID!
+  name: String!
+  birthDate: String! # Date
+  age: Int!
+  active: Boolean!
+  owner: OwnerResponse
+  specie: SpecieResponse
+  breed: BreedResponse
+}
+input PetRequest {
+  name: String!
+  birthDate: String! # Date
+  age: Int!
+  ownerId: Int!
+  specieId: Int!
+  breedId: Int!
+}
+
+type PetPhotoResponse {
+  id: ID!
+  url: String!
+  uploadDate: String
+  petId: Int!
+}
+input PetPhotoRequest {
+  petId: Int!
+  url: String!
+}
+
+type SpecieResponse {
+  id: ID!
+  name: String!
+  active: Boolean!
+}
+input SpecieRequest {
+  name: String!
+}
