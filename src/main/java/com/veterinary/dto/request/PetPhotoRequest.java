@@ -14,4 +14,6 @@ public class PetPhotoRequest {
     @NotBlank(message = "The URL is required")
     @Size(max = 500)
     private String url;
+
+    private Boolean active;
 }

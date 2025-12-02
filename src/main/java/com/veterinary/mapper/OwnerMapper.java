@@ -15,6 +15,7 @@ public final class OwnerMapper {
                 .name(owner.getName())
                 .phone(owner.getPhone())
                 .address(owner.getAddress())
+                .active(owner.getActive())
                 .build();
     }
 
@@ -26,6 +27,7 @@ public final class OwnerMapper {
                 .name(dto.getName())
                 .phone(dto.getPhone())
                 .address(dto.getAddress())
+                .active(dto.getActive())
                 .build();
     }
 
@@ -36,5 +38,6 @@ public final class OwnerMapper {
         entity.setName(dto.getName());
         entity.setPhone(dto.getPhone());
         entity.setAddress(dto.getAddress());
+        entity.setActive(dto.getActive());
     }
 }

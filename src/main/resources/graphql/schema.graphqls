@@ -28,6 +28,7 @@ type BreedResponse {
 input BreedRequest {
   name: String!
   specieId: Int!
+  active: Boolean!
 }
 
 type OwnerResponse {
@@ -41,6 +42,7 @@ input OwnerRequest {
   name: String!
   phone: String!
   address: String!
+  active: Boolean!
 }
 
 type PetResponse {
@@ -57,6 +59,7 @@ input PetRequest {
   name: String!
   birthDate: String! # Date
   age: Int!
+  active: Boolean!
   ownerId: Int!
   specieId: Int!
   breedId: Int!
@@ -66,11 +69,13 @@ type PetPhotoResponse {
   id: ID!
   url: String!
   uploadDate: String
+  active: Boolean!
   petId: Int!
 }
 input PetPhotoRequest {
   petId: Int!
   url: String!
+  active: Boolean!
 }
 
 type SpecieResponse {
@@ -80,4 +85,5 @@ type SpecieResponse {
 }
 input SpecieRequest {
   name: String!
+  active: Boolean!
 }

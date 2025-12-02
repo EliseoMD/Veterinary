@@ -20,6 +20,8 @@ public class PetRequest {
     @NotNull(message = "The age is required")
     private Integer age;
 
+    private Boolean active;
+
     @NotNull
     private Integer ownerId;
 
