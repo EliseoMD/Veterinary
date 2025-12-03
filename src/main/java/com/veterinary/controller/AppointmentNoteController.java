@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/appointment_notes")
-@Tag(name = "Appointment Notes", description = "")
+@Tag(name = "Appointment Notes", description = "Notes")
 @RequiredArgsConstructor
 public class AppointmentNoteController {
 
