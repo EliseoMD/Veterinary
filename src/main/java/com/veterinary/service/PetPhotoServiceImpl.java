@@ -33,7 +33,7 @@ public class PetPhotoServiceImpl implements PetPhotoService {
                 .orElseThrow(() -> new EntityNotFoundException("Pet not found: " + request.getPetId()));
 
         PetPhoto entity = PetPhotoMapper.toEntity(request, pet);
-        entity.setUploadDate(LocalDateTime.now()); // Fecha automática
+        entity.setUploadDate(LocalDateTime.now());
 
         PetPhoto saved = repository.save(entity);
         return PetPhotoMapper.toResponse(saved);
