@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 public class AppointmentRequest {
 
-    @NotBlank(message = "The appointment date is required")
     private LocalDateTime date;
 
     @NotBlank(message = "The reason is required")

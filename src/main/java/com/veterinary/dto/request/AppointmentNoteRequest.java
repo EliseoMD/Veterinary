@@ -18,7 +18,6 @@ public class AppointmentNoteRequest {
     @Size(max = 200)
     private String note;
 
-    @NotBlank(message = "The date is required")
     private LocalDateTime date;
 
     private Boolean active;
